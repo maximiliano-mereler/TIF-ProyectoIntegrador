@@ -23,15 +23,15 @@ export class UsuariosService {
     return this.usuariosRepository.find();
   }
 
-  async findById(id: number): Promise<Usuario> {
+  async findById(id: number): Promise<Usuario | null> {
     return this.usuariosRepository.findOne({ where: { id } });
   }
 
-  async findByNombre(nombre: string): Promise<Usuario> {
+  async findByNombre(nombre: string): Promise<Usuario | null> {
     return this.usuariosRepository.findOne({ where: { nombre } });
   }
 
-  async update(id: number, nombre?: string, estado?: EstadoUsuario): Promise<Usuario> {
+  async update(id: number, nombre?: string, estado?: EstadoUsuario): Promise<Usuario | null> {
     await this.usuariosRepository.update(id, { nombre, estado });
     return this.findById(id);
   }
