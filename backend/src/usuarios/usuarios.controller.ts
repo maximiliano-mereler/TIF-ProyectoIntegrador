@@ -17,7 +17,7 @@ export class UsuariosController {
   }
 
   @Get(':id')
-  async findById(@Param('id') id: number): Promise<Usuario> {
+  async findById(@Param('id') id: number): Promise<Usuario | null> {
     return this.usuariosService.findById(id);
   }
 
@@ -25,7 +25,7 @@ export class UsuariosController {
   async update(
     @Param('id') id: number,
     @Body() body: { nombre?: string; estado?: EstadoUsuario },
-  ): Promise<Usuario> {
+  ): Promise<Usuario | null> {
     return this.usuariosService.update(id, body.nombre, body.estado);
   }
 
