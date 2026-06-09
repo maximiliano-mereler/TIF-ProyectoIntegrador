@@ -1,0 +1,37 @@
+<div class="login-container">
+    <div class="login-card">
+    <h2>Iniciar Sesión</h2>
+    <p class="subtitle">Trabajo Integrador Final - Backend & Frontend</p>
+
+    <form (ngSubmit)="onSubmit()">
+        <div class="form-group">
+        <label for="username">Usuario</label>
+        <input 
+            type="text" 
+            id="username" 
+            name="username" 
+            [(ngModel)]="nombre" 
+            placeholder="Ingrese su usuario"
+            autocomplete="off"
+        />
+        </div>
+
+        <div class="form-group">
+        <label for="password">Contraseña</label>
+        <input 
+            type="password" 
+            id="password" 
+            name="password" 
+            [(ngModel)]="clave" 
+            placeholder="Ingrese su contraseña"
+        />
+        </div>
+
+      <div *ngIf="errorMensaje" class="error-box">
+        {{ errorMensaje }}
+        </div>
+
+        <button type="submit" class="btn-login">Ingresar</button>
+    </form>
+    </div>
+</div>

@@ -33,7 +33,7 @@ export class UsuariosService {
     const nuevoUsuario = this.usuarioRepository.create({
         nombre: createUsuarioDto.nombre,
         clave: hashClave,
-        estado: createUsuarioDto.estado,
+        estado: 'ACTIVO',
     });
 
     return await this.usuarioRepository.save(nuevoUsuario);

@@ -1,0 +1,36 @@
+<div class="dashboard-layout">
+    <aside class="sidebar">
+    <div class="sidebar-header">
+        <h3>Gesti&oacute;n TIF</h3>
+        <p class="user-welcome">Operador: <span>{{ usuarioLogueado }}</span></p>
+    </div>
+
+    <nav class="sidebar-menu">
+        <a routerLink="usuarios" routerLinkActive="active-link" class="menu-item">
+        Gestionar Usuarios
+        </a>
+        <a routerLink="clientes" routerLinkActive="active-link" class="menu-item">
+        Gestionar Clientes
+        </a>
+        <a routerLink="proyectos" routerLinkActive="active-link" class="menu-item">
+        Gestionar Proyectos
+        </a>
+        <a routerLink="tareas" routerLinkActive="active-link" class="menu-item">
+        Gestionar Tareas
+        </a>
+    </nav>
+
+    <div class="sidebar-footer">
+        <button (click)="cerrarSesion()" class="btn-logout">Cerrar Sesi&oacute;n</button>
+    </div>
+    </aside>
+
+    <main class="main-content">
+    <header class="content-header">
+        <h1>Panel de Control de Ingenier&iacute;a</h1>
+    </header>
+    <section class="content-body">
+        <router-outlet></router-outlet>
+    </section>
+    </main>
+</div>
