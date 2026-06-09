@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Tarea } from './entities/tarea.entity';
 import { CreateTareaDto } from './dto/create-tarea.dto';
 import { Proyecto } from '../proyectos/entities/proyecto.entity';
+import { UpdateTareaDto } from './dto/update-tarea.dto';
 
 @Injectable()
 export class TareasService {
@@ -41,4 +42,25 @@ export class TareasService {
 
     return await this.tareaRepository.save(nuevaTarea);
   }
+
+  async update(id: number, updateTareaDto: UpdateTareaDto): Promise<Tarea> {
+    const tarea = await this.tareaRepository.findOne({ where: { id }, relations: { proyecto: true } });
+    if (!tarea) {
+      throw new NotFoundException(`La tarea con ID ${id} no existe`);
+    }
+
+    if (updateTareaDto.id_proyecto) {
+      const proyecto = await this.proyectoRepository.findOne({ where: { id: updateTareaDto.id_proyecto } });
+      if (!proyecto) {
+        throw new NotFoundException(`El proyecto con ID ${updateTareaDto.id_proyecto} no existe`);
+      }
+      tarea.proyecto = proyecto;
+    }
+
+    if (updateTareaDto.descripcion) tarea.descripcion = updateTareaDto.descripcion;
+    if (updateTareaDto.estado) tarea.estado = updateTareaDto.estado;
+
+    return await this.tareaRepository.save(tarea);
+  }
+
 }

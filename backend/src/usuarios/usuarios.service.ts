@@ -1,10 +1,10 @@
-import { Injectable, ConflictException } from '@nestjs/common';
+import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Usuario } from './entities/usuario.entity';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import * as bcrypt from 'bcrypt';
-
+import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 @Injectable()
 export class UsuariosService {
     constructor(
@@ -37,5 +37,31 @@ export class UsuariosService {
     });
 
     return await this.usuarioRepository.save(nuevoUsuario);
+    }
+
+    async update(id: number, updateUsuarioDto: UpdateUsuarioDto): Promise<Usuario> {
+    const usuario = await this.usuarioRepository.findOne({ where: { id } });
+    if (!usuario) {
+        throw new NotFoundException(`El usuario con ID ${id} no existe`);
+    }
+
+    if (updateUsuarioDto.nombre && updateUsuarioDto.nombre !== usuario.nombre) {
+        const usuarioExiste = await this.usuarioRepository.findOne({ where: { nombre: updateUsuarioDto.nombre } });
+        if (usuarioExiste) {
+        throw new ConflictException('El nombre de usuario ya está registrado');
+        }
+        usuario.nombre = updateUsuarioDto.nombre;
+    }
+
+    if (updateUsuarioDto.clave) {
+        const salt = await bcrypt.genSalt(10);
+        usuario.clave = await bcrypt.hash(updateUsuarioDto.clave, salt);
+    }
+
+    if (updateUsuarioDto.estado) {
+        usuario.estado = updateUsuarioDto.estado;
+    }
+
+    return await this.usuarioRepository.save(usuario);
     }
 }
