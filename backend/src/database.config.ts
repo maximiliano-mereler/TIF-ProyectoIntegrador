@@ -1,9 +1,9 @@
 import { DataSource } from 'typeorm';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { Usuario } from '../usuarios/entities/usuario.entity';
-import { Cliente } from '../clientes/entities/cliente.entity';
-import { Proyecto } from '../proyectos/entities/proyecto.entity';
-import { Tarea } from '../tareas/entities/tarea.entity';
+import { Usuario } from './usuarios/entities/usuario.entity';
+import { Cliente } from './clientes/entities/cliente.entity';
+import { Proyecto } from './proyectos/entities/proyecto.entity';
+import { Tarea } from './tareas/entities/tarea.entity';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
