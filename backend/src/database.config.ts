@@ -1,6 +1,9 @@
 import { DataSource } from 'typeorm';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { Usuario, Cliente, Proyecto, Tarea } from './entities';
+import { Usuario } from '../usuarios/entities/usuario.entity';
+import { Cliente } from '../clientes/entities/cliente.entity';
+import { Proyecto } from '../proyectos/entities/proyecto.entity';
+import { Tarea } from '../tareas/entities/tarea.entity';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -10,7 +13,7 @@ export const AppDataSource = new DataSource({
   password: process.env.DB_PASSWORD || 'postgres',
   database: process.env.DB_NAME || 'tif_proyecto',
   entities: [Usuario, Cliente, Proyecto, Tarea],
-  synchronize: false, // Cambiado a false para respetar el script init.sql de la cátedra
+  synchronize: false,
   logging: process.env.NODE_ENV === 'development',
 });
 
@@ -22,6 +25,6 @@ export const databaseConfig: TypeOrmModuleOptions = {
   password: process.env.DB_PASSWORD || 'postgres',
   database: process.env.DB_NAME || 'tif_proyecto',
   entities: [Usuario, Cliente, Proyecto, Tarea],
-  synchronize: false, // Cambiado a false para evitar que TypeORM altere las tablas del script
+  synchronize: false,
   logging: process.env.NODE_ENV === 'development',
 };
