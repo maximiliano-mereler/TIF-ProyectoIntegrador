@@ -16,7 +16,7 @@ export class TareasComponent implements OnInit {
   proyectoId!: number;
   proyecto?: Proyecto;
   tareas: Tarea[] = [];
-
+  
   nuevaDescripcion: string = '';
   errorMensaje: string = '';
   exitoMensaje: string = '';
@@ -24,13 +24,10 @@ export class TareasComponent implements OnInit {
   constructor(
     private readonly route: ActivatedRoute,
     private readonly apiService: ApiService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('proyectoId');
-
-    // Imprime en la consola F12 del navegador para verificar el valor capturado
-    console.log('ID del proyecto capturado desde la URL:', idParam);
 
     if (idParam) {
       this.proyectoId = Number(idParam);
@@ -53,13 +50,19 @@ export class TareasComponent implements OnInit {
 
   async cargarTareas(): Promise<void> {
     try {
-      this.tareas = await this.apiService.get(`tareas?proyectoId=${this.proyectoId}`);
+      // Ajuste de ruta estándar según los controladores comunes de NestJS
+      this.tareas = await this.apiService.get(`tareas?id_proyecto=${this.proyectoId}`);
     } catch (error) {
-      this.errorMensaje = 'No se pudieron cargar las tareas de este proyecto.';
+      try {
+        // Segunda opción de respaldo si el backend maneja rutas parametrizadas nativas
+        this.tareas = await this.apiService.get(`tareas/proyecto/${this.proyectoId}`);
+      } catch (err) {
+        this.errorMensaje = 'No se pudieron cargar las tareas de este proyecto.';
+      }
     }
   }
 
-    async crearTarea(): Promise<void> {
+  async crearTarea(): Promise<void> {
     this.errorMensaje = '';
     this.exitoMensaje = '';
 
@@ -68,13 +71,10 @@ export class TareasComponent implements OnInit {
       return;
     }
 
-    // Objeto con todas las variantes de mapeo relacional para TypeORM
     const payload = {
       descripcion: this.nuevaDescripcion,
-      proyectoId: this.proyectoId,
-      proyecto: { id: this.proyectoId },
-      Proyecto: { id: this.proyectoId },
-      proyecto_id: this.proyectoId
+      id_proyecto: this.proyectoId,
+      estado: 'PENDIENTE'
     };
 
     try {
@@ -86,9 +86,6 @@ export class TareasComponent implements OnInit {
       this.errorMensaje = error.response?.data?.message || 'Error al crear la tarea.';
     }
   }
-
-
-
 
   async cambiarEstado(tarea: Tarea, nuevoEstado: 'PENDIENTE' | 'FINALIZADA' | 'BAJA'): Promise<void> {
     this.errorMensaje = '';
