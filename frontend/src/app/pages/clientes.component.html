@@ -1,0 +1,56 @@
+<div class="modulo-container">
+  <h2>Administraci&oacute;n de Clientes</h2>
+
+  <div *ngIf="errorMensaje" class="alert error-alert">{{ errorMensaje }}</div>
+  <div *ngIf="exitoMensaje" class="alert success-alert">{{ exitoMensaje }}</div>
+
+  <div class="card-formulario">
+    <h3>Alta de Nuevo Cliente</h3>
+    <form (ngSubmit)="crearCliente()" class="form-inline">
+      <div class="form-group">
+        <input 
+          type="text" 
+          name="nuevoNombre" 
+          [(ngModel)]="nuevoNombre" 
+          placeholder="Nombre de la empresa o cliente" 
+          autocomplete="off"
+        />
+      </div>
+      <button type="submit" class="btn-primary">Registrar Cliente</button>
+    </form>
+  </div>
+
+  <div class="card-tabla">
+    <h3>Clientes Registrados</h3>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre Cliente</th>
+          <th>Estado Actual</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of clientes">
+          <td>{{ c.id }}</td>
+          <td>{{ c.nombre }}</td>
+          <td>
+            <span class="badge" [ngClass]="c.estado === 'ACTIVO' ? 'badge-activo' : 'badge-baja'">
+              {{ c.estado }}
+            </span>
+          </td>
+          <td>
+            <button 
+              (click)="alternarEstado(c)" 
+              class="btn-action" 
+              [ngClass]="c.estado === 'ACTIVO' ? 'btn-danger' : 'btn-success'"
+            >
+              {{ c.estado === 'ACTIVO' ? 'Dar de Baja' : 'Activar' }}
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

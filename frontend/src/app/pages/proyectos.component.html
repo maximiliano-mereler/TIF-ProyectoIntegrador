@@ -1,0 +1,84 @@
+<div class="modulo-container">
+  <h2>Gesti&oacute;n de Proyectos</h2>
+
+  <div *ngIf="errorMensaje" class="alert error-alert">{{ errorMensaje }}</div>
+  <div *ngIf="exitoMensaje" class="alert success-alert">{{ exitoMensaje }}</div>
+
+  <div class="card-formulario">
+    <h3>Crear Nuevo Proyecto</h3>
+    <form (ngSubmit)="crearProyecto()" class="form-inline">
+      <div class="form-group">
+        <input type="text" name="nuevoNombre" [(ngModel)]="nuevoNombre" placeholder="Nombre del proyecto"
+          autocomplete="off" />
+      </div>
+
+      <div class="form-group">
+        <select name="clienteSeleccionadoId" [(ngModel)]="clienteSeleccionadoId">
+          <option [ngValue]="null">-- Sin Cliente (Proyecto Interno) --</option>
+          <option *ngFor="let c of clientesActivos" [value]="c.id">
+            {{ c.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn-primary">Crear Proyecto</button>
+    </form>
+  </div>
+
+  <div class="card-tabla">
+    <h3>Proyectos en el Sistema</h3>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre Proyecto</th>
+          <th>Cliente Asociado</th>
+          <th>Estado</th>
+          <th>Acciones de Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of proyectos">
+          <td>{{ p.id }}</td>
+          <td><strong>{{ p.nombre }}</strong></td>
+          <td>
+            <span *ngIf="p.cliente; else interno">
+              {{ p.cliente.nombre }}
+            </span>
+            <ng-template #interno><span class="txt-muted">Interno</span></ng-template>
+          </td>
+          <td>
+            <span class="badge" [ngClass]="{
+              'badge-activo': p.estado === 'ACTIVO',
+              'badge-finalizado': p.estado === 'FINALIZADO',
+              'badge-baja': p.estado === 'BAJA'
+            }">
+              {{ p.estado }}
+            </span>
+          </td>
+          <td>
+            <div style="display: flex; gap: 12px; align-items: center;">
+              <button [routerLink]="['/dashboard/tareas', p.id]" class="btn-sm"
+                style="background-color: #0284c7; color: white;">
+                Ver Tareas
+              </button>
+
+
+              <div class="btn-group">
+                <button *ngIf="p.estado !== 'ACTIVO'" (click)="cambiarEstado(p, 'ACTIVO')"
+                  class="btn-sm btn-activo">Activar</button>
+
+                <button *ngIf="p.estado !== 'FINALIZADO'" (click)="cambiarEstado(p, 'FINALIZADO')"
+                  class="btn-sm btn-finalizado">Finalizar</button>
+
+                <button *ngIf="p.estado !== 'BAJA'" (click)="cambiarEstado(p, 'BAJA')" class="btn-sm btn-baja">Dar de
+                  Baja</button>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+
+    </table>
+  </div>
+</div>

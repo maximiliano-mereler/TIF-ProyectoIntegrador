@@ -1,0 +1,78 @@
+<div class="modulo-container">
+  <div class="header-acciones">
+    <button routerLink="/dashboard/proyectos" class="btn-back">&larr; Volver a Proyectos</button>
+    <h2>Tareas del Proyecto: <span class="txt-proyecto" *ngIf="proyecto">{{ proyecto.nombre }}</span></h2>
+  </div>
+
+  <div *ngIf="errorMensaje" class="alert error-alert">{{ errorMensaje }}</div>
+  <div *ngIf="exitoMensaje" class="alert success-alert">{{ exitoMensaje }}</div>
+
+  <div class="card-formulario">
+    <h3>Agregar Nueva Tarea</h3>
+    <form (ngSubmit)="crearTarea()" class="form-inline">
+      <div class="form-group">
+        <input 
+          type="text" 
+          name="nuevaDescripcion" 
+          [(ngModel)]="nuevaDescripcion" 
+          placeholder="Descripción de la tarea a realizar" 
+          autocomplete="off"
+        />
+      </div>
+      <button type="submit" class="btn-primary">Agregar Tarea</button>
+    </form>
+  </div>
+
+  <div class="card-tabla">
+    <h3>Listado de Tareas</h3>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Descripción</th>
+          <th>Estado</th>
+          <th>Acciones de Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let t of tareas">
+          <td>{{ t.id }}</td>
+          <td>{{ t.descripcion }}</td>
+          <td>
+            <span class="badge" [ngClass]="{
+              'badge-pendiente': t.estado === 'PENDIENTE',
+              'badge-finalizado': t.estado === 'FINALIZADA',
+              'badge-baja': t.estado === 'BAJA'
+            }">
+              {{ t.estado }}
+            </span>
+          </td>
+          <td>
+            <div class="btn-group">
+              <button 
+                *ngIf="t.estado !== 'PENDIENTE'" 
+                (click)="cambiarEstado(t, 'PENDIENTE')" 
+                class="btn-sm btn-pendiente"
+              >Pendiente</button>
+              
+              <button 
+                *ngIf="t.estado !== 'FINALIZADA'" 
+                (click)="cambiarEstado(t, 'FINALIZADA')" 
+                class="btn-sm btn-finalizado"
+              >Finalizar</button>
+              
+              <button 
+                *ngIf="t.estado !== 'BAJA'" 
+                (click)="cambiarEstado(t, 'BAJA')" 
+                class="btn-sm btn-baja"
+              >Dar de Baja</button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="tareas.length === 0">
+          <td colspan="4" class="txt-center">Este proyecto aún no posee tareas registradas.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
